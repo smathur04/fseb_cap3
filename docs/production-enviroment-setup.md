@@ -117,8 +117,10 @@ For each microservice, add PostgreSQL support:
 # Navigate to each service directory and run:
 dotnet add package Npgsql.EntityFrameworkCore.PostgreSQL --version 10.0.3
 dotnet add package Microsoft.EntityFrameworkCore.Design --version 10.0.10
-dotnet add package Microsoft.EntityFrameworkCore.InMemory --version 10.0.10
 ```
+
+You already have `Microsoft.EntityFrameworkCore.InMemory` from local development. It stays for the `Development`
+branch of `Program.cs` below and is never used by the deployed app.
 
 ### Update Program.cs for Production
 
@@ -152,13 +154,33 @@ if (!app.Environment.IsDevelopment())
 }
 ```
 
+**Why `Database.Migrate()` instead of `dotnet ef database update`?** In class you applied migrations from your
+laptop with `dotnet ef database update`, which connects to the database directly. That is not possible here: the
+RDS instance is not publicly accessible, so nothing on your machine can reach it. `Database.Migrate()` is the same
+operation performed by the service itself when it starts on the Beanstalk instance, which is inside the VPC and
+can reach RDS. With Npgsql it also creates the database (`catalogservicedb`, `reservationservicedb`) if it does not
+exist yet. Do not run `dotnet ef database update` against RDS; it will time out.
+
 Each service must also accept its port from the command line rather than hardcoding it: leave `"urls"` out of
 `appsettings.json` for production, or make sure `--urls` on the command line wins. The deployment starts each
 service with `--urls http://0.0.0.0:<port>`.
 
 ### Create Entity Framework Migrations
 
-For each service:
+`dotnet ef migrations add` builds your `Program.cs` to discover the `DbContext`, so `GetConnectionString("CatalogDb")`
+must return something at design time or it fails with "Unable to create a DbContext". Put a placeholder in each
+service's `appsettings.Development.json` (it is never connected to at this step):
+
+```json
+{
+  "ConnectionStrings": {
+    "CatalogDb": "Host=localhost;Port=5432;Database=catalogservicedb;Username=postgres;Password=postgres"
+  }
+}
+```
+
+Use `UserDb` and `ReservationDb` in the other two. Then, for each service (`dotnet restore` first, or `dotnet ef`
+reports "Unable to retrieve project metadata"):
 
 ```bash
 # Install EF Core Tools globally (once)
@@ -234,8 +256,9 @@ cp -r .platform bundle/
 (cd bundle && zip -r ../library-microservices.zip .)
 ```
 
-Verify the zip has the right shape (the `Procfile` and `.platform` folder must be at the root, not inside a
-subfolder):
+Migrations are compiled into each service's DLL by `dotnet publish`; you will not see a `Migrations` folder in the
+zip, and that is correct. Verify the zip has the right shape (the `Procfile` and `.platform` folder must be at the
+root, not inside a subfolder):
 
 ```bash
 unzip -l library-microservices.zip | grep -E "Procfile|services.conf|\.dll$"
@@ -491,7 +514,7 @@ Restart app server(s).
 
 **Check:**
 
-- Migrations folder is included in each service's publish output
+- `Migrations/` folder existed in the service's source when you ran `dotnet publish` (it is compiled into the DLL)
 - `Database.Migrate()` is called in Program.cs (this also creates the database)
 - Application has permission to create tables
 - Check logs for migration errors
