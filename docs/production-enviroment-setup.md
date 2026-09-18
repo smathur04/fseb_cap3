@@ -74,6 +74,17 @@ resource. Default VPC, default subnet group, Public access **No**, security grou
 
 ![Storage autoscaling off, no EC2 connection, Default VPC](images/rds/05-autoscaling-connectivity.png)
 
+Further down in Connectivity: Public access **No**, VPC security group **Choose existing** with `default` selected,
+Availability Zone No preference, no RDS Proxy, port 5432.
+
+![Public access No, existing security group default](images/rds/05b-public-access-security-group.png)
+
+**Monitoring.** Database Insights **Standard**, leave "Collect detailed database and per-query metrics" unticked,
+and under Additional monitoring settings leave **Enable Enhanced monitoring** unticked. The red "Error loading KMS
+Keys" box is expected in the sandbox and does not affect anything.
+
+![Monitoring: Standard insights, enhanced monitoring off, KMS error is expected](images/rds/05c-monitoring.png)
+
 **6. Additional configuration.** Expand it. **Initial database name: `userservicedb`**. Leave it blank and no
 database is created at all.
 
