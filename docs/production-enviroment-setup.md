@@ -169,7 +169,8 @@ service with `--urls http://0.0.0.0:<port>`.
 
 `dotnet ef migrations add` builds your `Program.cs` to discover the `DbContext`, so `GetConnectionString("CatalogDb")`
 must return something at design time or it fails with "Unable to create a DbContext". Put a placeholder in each
-service's `appsettings.Development.json` (it is never connected to at this step):
+service's `appsettings.Development.json` (`migrations add` only reads it, it never connects; don't run
+`dotnet ef migrations list` or `database update`, both try to connect and will fail without a local Postgres):
 
 ```json
 {
@@ -191,21 +192,21 @@ export PATH="$PATH:$HOME/.dotnet/tools"
 cd UserService
 dotnet restore
 dotnet ef migrations add InitialCreate
-dotnet ef migrations list
+ls Migrations
 cd ..
 
 # Catalog Service
 cd CatalogService
 dotnet restore
 dotnet ef migrations add InitialCreate
-dotnet ef migrations list
+ls Migrations
 cd ..
 
 # Reservation Service
 cd ReservationService
 dotnet restore
 dotnet ef migrations add InitialCreate
-dotnet ef migrations list
+ls Migrations
 cd ..
 ```
 
