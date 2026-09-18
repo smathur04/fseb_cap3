@@ -257,6 +257,8 @@ cp -r .platform bundle/
 (cd bundle && zip -r ../library-microservices.zip .)
 ```
 
+Verification: Peek inside the zip to see what we're about to push:
+
 Migrations are compiled into each service's DLL by `dotnet publish`; you will not see a `Migrations` folder in the
 zip, and that is correct. Verify the zip has the right shape (the `Procfile` and `.platform` folder must be at the
 root, not inside a subfolder):
@@ -264,6 +266,7 @@ root, not inside a subfolder):
 ```bash
 unzip -l library-microservices.zip | grep -E "Procfile|services.conf|\.dll$"
 ```
+<img width="400" height="300" alt="image" src="https://github.com/user-attachments/assets/78bb54cb-f56f-423f-bd76-2a363e219b99" />
 
 ---
 
