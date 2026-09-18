@@ -60,7 +60,7 @@ These were taken creating an instance called `java-capstone` with initial databa
 
 ![Engine type PostgreSQL, Full configuration, Sandbox template](images/rds/02-engine-method-template.png)
 
-**3. Identifier and credentials.** `library-microservices-db`, master username `postgres`, **Self managed**, type
+**3. Identifier and credentials.** `library-microservices-db` (not "java capstone as in the below screenshot" ;), master username `postgres`, **Self managed**, type
 and confirm a password, write it down.
 
 ![DB instance identifier and Self managed credentials](images/rds/03-identifier-credentials.png)
