@@ -412,6 +412,16 @@ curl $EB/catalog/health
 curl $EB/reservations/health
 ```
 
+Each one must report its own service name and its own database. `migrations: 1` (or however many you have) means
+the service reached RDS, created its database if needed, and applied its migrations on startup. Three UP responses
+with three different database names is the proof that the whole deployment works.
+
+![UserService health: userservicedb](images/verify/01-user-health.png)
+
+![CatalogService health: catalogservicedb](images/verify/02-catalog-health.png)
+
+![ReservationService health: reservationservicedb](images/verify/03-reservation-health.png)
+
 **User Service:**
 
 ```bash
