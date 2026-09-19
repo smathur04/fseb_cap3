@@ -370,8 +370,11 @@ type** → `t3.medium`. Only `t3.medium` when you are done.
 
 ![Instance types showing only t3.medium](images/eb/06-instance-type-t3-medium.png)
 
-**6. Networking.** Default VPC, subnets pre-selected. Under **EC2 security groups**, open the dropdown and tick
-**`default`**.
+**6. Networking.** Default VPC, subnets pre-selected (the blue note about us-east-1e is normal). Under **EC2 security
+groups**, open the dropdown and pick **`default`** (it shows as `sg-... (default)`, "default VPC security group").
+This is what lets the instance reach RDS; skip it and every service fails to start.
+
+![Default VPC, subnets, default security group selected](images/eb/07-networking-default-sg.png)
 
 **7. Monitoring and logging.** Health reporting **Basic**. Everything else unticked.
 
