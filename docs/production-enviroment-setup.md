@@ -349,33 +349,39 @@ Linux 2023**, version Recommended. Application code: Local file → `library-mic
 
 ![Environment details, .NET 10 platform, zip uploaded](images/eb/01-environment-platform-zip.png)
 
+**2. Environment properties.** Tick **Add environment properties** and add all ten. The value column is cut off on
+screen; the third row is scrolled to the end to show the `Username=postgres;Password=...` tail. Use your own RDS
+endpoint and master password.
+
+![The ten environment properties](images/eb/02-environment-properties.png)
+
 The remaining screenshots were taken deploying the Java capstone; the Beanstalk screens are identical from here on.
 
-**2. Service access.** Expand it. Leave both on **Create default role**.
+**3. Service access.** Expand it. Leave both on **Create default role**.
 
 ![Service access with Create default role](images/eb/04-service-access.png)
 
-**3. Infrastructure: tier and scaling.** Web server environment, **Single instance**, On-Demand.
+**4. Infrastructure: tier and scaling.** Web server environment, **Single instance**, On-Demand.
 
 ![Web server, single instance, on-demand](images/eb/05-single-instance.png)
 
-**4. Infrastructure: compute.** Under **Instance types**, **Remove** `t3.micro` and `t3.small`, then **Add instance
+**5. Infrastructure: compute.** Under **Instance types**, **Remove** `t3.micro` and `t3.small`, then **Add instance
 type** → `t3.medium`. Only `t3.medium` when you are done.
 
 ![Instance types showing only t3.medium](images/eb/06-instance-type-t3-medium.png)
 
-**5. Networking.** Default VPC, subnets pre-selected. Under **EC2 security groups**, open the dropdown and tick
+**6. Networking.** Default VPC, subnets pre-selected. Under **EC2 security groups**, open the dropdown and tick
 **`default`**.
 
-**6. Monitoring and logging.** Health reporting **Basic**. Everything else unticked.
+**7. Monitoring and logging.** Health reporting **Basic**. Everything else unticked.
 
 ![Monitoring and logging left at defaults](images/eb/08-monitoring-logging.png)
 
-**7. Deployments and managed updates.** All at once. **Untick "Enable managed updates"**.
+**8. Deployments and managed updates.** All at once. **Untick "Enable managed updates"**.
 
 ![Managed updates unticked](images/eb/09-managed-updates-off.png)
 
-**8. Create.** Expand **Review**, confirm Instance types shows `t3.medium` only, Security groups shows `default`,
+**9. Create.** Expand **Review**, confirm Instance types shows `t3.medium` only, Security groups shows `default`,
 Managed updates shows "Turned off", and Environment properties lists all ten. Click **Create**. Wait 5-10 minutes
 for "Environment successfully launched" and Health **Green**.
 
