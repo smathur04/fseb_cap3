@@ -7,6 +7,9 @@ using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -54,7 +57,7 @@ public class MockHttpMessageHandler : HttpMessageHandler
 public class ReservationServiceWebApplicationFactory : WebApplicationFactory<Program>
 {
     // JWT credentials used both to sign test tokens and to configure the app validator
-    internal const string TestJwtSecret = "test-jwt-secret-for-integration-tests-min32!";
+    internal const string TestJwtSecret = "dev-secret-key-change-in-production-min32chars";
     internal const string TestJwtIssuer = "LibraryManagementApi";
     internal const string TestJwtAudience = "LibraryManagementApiUsers";
 

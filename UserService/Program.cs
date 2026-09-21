@@ -72,7 +72,20 @@ builder.Services.AddHttpClient<ReservationServiceClient>(c =>
 });
 
 // ─── Controllers & Validation ─────────────────────────────────────────────────
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .ConfigureApiBehaviorOptions(options =>
+    {
+        options.InvalidModelStateResponseFactory = context =>
+        {
+            var firstError = context.ModelState
+                .Where(e => e.Value?.Errors.Count > 0)
+                .SelectMany(e => e.Value!.Errors)
+                .Select(e => e.ErrorMessage)
+                .FirstOrDefault() ?? "Validation failed.";
+            return new Microsoft.AspNetCore.Mvc.BadRequestObjectResult(
+                new UserService.Models.DTOs.ErrorResponse("VALIDATION_ERROR", firstError));
+        };
+    });
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
